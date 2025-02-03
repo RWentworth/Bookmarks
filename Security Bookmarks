@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Security Links</title>
+</head>
+<body>
+    <center>
+        <h1>Security Links</h1>
+    </center>
+
+    <hr>
+    <h2>Threat Analysis Tools</h2>
+    <ul>
+        <li><a href="http://rs-macbook-pro.local:8000" target="_blank">Splunk</a></li>
+    </ul>
+<li>
+    <a href="#" onclick="runWireshark()" title="Click to open Wireshark">
+        Launch Wireshark
+    </a>
+</li>
+<script>
+    function runWireshark() {
+        // Create a terminal command to open Wireshark
+        const { exec } = require('child_process');
+        exec('open /Applications/Wireshark.app', (err, stdout, stderr) => {
+            if (err) {
+                alert('Error launching Wireshark: ' + err.message);
+                return;
+            }
+            console.log('Wireshark launched successfully.');
+        });
+    }
+</script>
+    <hr>
+    <h2>Wireshark Commands</h2>
+    <ul>
+        <li>
+            <a href="#" title="Filter for TCP SYN packets not followed by ACK. Indicates potential SYN flood attacks or unauthorized connections.">
+                TCP SYN Packets Without ACK (Unauthorized Connections)
+            </a>
+            <pre>(tcp.flags.syn == 1) and (tcp.flags.ack == 0)</pre>
+        </li>
+        <li>
+            <a href="#" title="Filter for TCP SYN packets without ACK. Useful for identifying SYN flood attacks.">
+                Detect SYN Flood Attacks
+            </a>
+            <pre>(tcp.flags.syn == 1) and (tcp.flags.ack == 0)</pre>
+        </li>
+        <li>
+            <a href="#" title="Filter excludes traffic on ports 80 and 443 to identify non-standard port activity.">
+                Exclude Standard Web Ports (80 and 443)
+            </a>
+            <pre>!(port == 80) and !(port == 443)</pre>
+        </li>
+        <li>
+            <a href="#" title="Filter excludes common web and DNS traffic to focus on unusual ports.">
+                Filter for Unusual Ports
+            </a>
+            <pre>!(port == 80) and !(port == 443) and !(port == 53)</pre>
+        </li>
+        <li>
+            <a href="#" title="Filter excludes ARP, ICMP, and DNS traffic to focus on uncommon protocols.">
+                Filter for Uncommon Protocols
+            </a>
+            <pre>!(arp) and !(icmp) and !(dns)</pre>
+        </li>
+        <li>
+            <a href="#" title="Shows packets larger than the Ethernet MTU (1500 bytes), which might indicate malicious activity.">
+                Filter for Large Packets
+            </a>
+            <pre>frame.len > 1500</pre>
+        </li>
+        <li>
+            <a href="#" title="Replace x.x.x.x with the specific source IP to identify unusually high traffic from one host.">
+                Filter for High Number of Packets from a Single Source
+            </a>
+            <pre>ip.src == x.x.x.x</pre>
+        </li>
+        <li>
+            <a href="#" title="Replace x.x.x.x and y.y.y.y with specific destination IPs suspected to be malicious.">
+                Filter for Suspicious Destination IP Addresses
+            </a>
+            <pre>ip.dst == x.x.x.x or ip.dst == y.y.y.y</pre>
+        </li>
+        <li>
+            <a href="#" title="Identifies SYN packets without ACK and without RESET, indicating failed login attempts or port scans.">
+                Filter for Excessive Failed Login Attempts
+            </a>
+            <pre>(tcp.flags.syn == 1) and (tcp.flags.ack == 0) and (tcp.flags.reset == 0)</pre>
+        </li>
+        <li>
+            <a href="#" title="Replace x.x.x.x with the source IP to identify excessive outbound traffic beyond 10,000 bytes.">
+                Filter for Excessive Outbound Traffic
+            </a>
+            <pre>ip.src == x.x.x.x and bytes > 10000</pre>
+        </li>
+        <li>
+            <a href="#" title="Excludes common web and DNS traffic to focus on unusual ports and protocols.">
+                Filter for Unusual Protocols or Port Numbers
+            </a>
+            <pre>!(tcp.port == 80 or tcp.port == 443 or udp.port == 53)</pre>
+        </li>
+        <li>
+            <a href="#" title="Captures DNS queries not responses with A (IPv4) query type, potentially indicating DGAs or malware.">
+                Filter for Suspicious DNS Queries
+            </a>
+            <pre>dns.flags.response == 0 and dns.qry.type == 1</pre>
+        </li>
+        <li>
+            <a href="#" title="Shows TCP retransmissions, duplicate ACKs, or out-of-order packets, which could indicate issues or tampering.">
+                Filter for Unusual Traffic Patterns
+            </a>
+            <pre>tcp.analysis.retransmission or tcp.analysis.duplicate_ack or tcp.analysis.out_of_order</pre>
+        </li>
+        <li>
+            <a href="#" title="Captures ARP replies where the source and destination MACs don't match, potentially indicating spoofing.">
+                Filter for ARP Spoofing or Poisoning Attempts
+            </a>
+            <pre>arp.opcode == 2 and arp.dst.hw_mac != arp.src.hw_mac</pre>
+        </li>
+        <li>
+            <a href="#" title="Captures ICMP Echo Request (Ping) packets. High volumes might indicate network scans or DoS attacks.">
+                Filter for ICMP Attacks
+            </a>
+            <pre>icmp.type == 8</pre>
+        </li>
+        <li>
+            <a href="#" title="Captures HTTP requests with command-line tool user agents like curl, wget, or Python-urllib.">
+                Filter for Unusual User Agents
+            </a>
+            <pre>http.user_agent contains "curl" or http.user_agent contains "wget" or http.user_agent contains "Python-urllib"</pre>
+        </li>
+        <li>
+            <a href="#" title="Captures SYN packets on ports 22 (SSH) or 3389 (RDP) without an ACK, indicating brute-force attempts.">
+                Filter for Large Numbers of Failed Authentication Attempts
+            </a>
+            <pre>(tcp.dstport == 22 or tcp.dstport == 3389) and tcp.flags.syn == 1 and tcp.flags.ack == 0</pre>
+        </li>
+        <li>
+            <a href="#" title="Captures DNS queries with single questions, potentially indicating beaconing or command-and-control (C2) traffic.">
+                Filter for Beaconing Traffic
+            </a>
+            <pre>(dns.flags.response == 0 and dns.count.queries == 1) and (dns.qry.name contains "example.com" or dns.qry.name contains "c2server.com")</pre>
+        </li>
+        <li>
+            <a href="#" title="Replace x.x.x.x and y.y.y.y with specific IPs suspected to be malicious or suspicious.">
+                Filter for Suspicious Source or Destination IPs
+            </a>
+            <pre>ip.src == x.x.x.x or ip.dst == y.y.y.y</pre>
+        </li>
+        <li>
+            <a href="#" title="Captures SYN packets without ACK flags, which could indicate SYN flood attacks.">
+                Filter for Large Numbers of SYN Packets
+            </a>
+            <pre>tcp.flags.syn == 1 and tcp.flags.ack == 0</pre>
+        </li>
+        <li>
+            <a href="#" title="Captures ICMP Redirect packets, which can be used for network reconnaissance.">
+                Filter for ICMP Redirects
+            </a>
+            <pre>icmp.type == 5</pre>
+        </li>
+        <li>
+            <a href="#" title="Captures DNS responses taking longer than 500ms, potentially indicating DNS tunneling.">
+                Filter for Long DNS Response Times
+            </a>
+            <pre>dns.time > 500</pre>
+        </li>
+    </ul>
+
+  </ul>
+
+    <hr>
+    <h2>Threat Analysis Links</h2>
+    <ul>
+        <li><a href="https://www.threatminer.org/" target="_blank">Threatminer</a></li>
+        <li><a href="https://otx.alienvault.com/" target="_blank">Alienvault</a></li>
+        <li><a href="https://iplists.firehol.org/" target="_blank">IPlist Firehol</a></li>
+        <li><a href="https://www.badips.com/" target="_blank">Badips</a></li>
+        <li><a href="https://talosintelligence.com/" target="_blank">Talos Intelligence</a></li>
+        <li><a href="https://www.virustotal.com/" target="_blank">VirusTotal</a></li>
+        <li><a href="https://www.ultratools.com/" target="_blank">UltraTools</a></li>
+        <li><a href="https://namespedia.com/" target="_blank">Namespedia</a></li>
+        <li><a href="#" title="Check IP and hosting info such as city and country.">IP and Hosting Info (City and Country)</a></li>
+        <li><a href="#" title="Directory fuzzing tools like Dirbuster and Wfuzz.">Directory FUZZ (Dirbuster and Wfuzz)</a></li>
+        <li><a href="#" title="APIs for Google Page Rank, Alexa Rank, and blacklist checks.">API (Google Page Rank, Alexa Rank, Blacklist Checks)</a></li>
+        <li><a href="https://www.spamcop.net/" target="_blank" title="Whois for abuse mail using Spamcop.">Whois for Abuse Mail (Spamcop)</a></li>
+        <li><a href="#" title="Retrieve ASN, network range, and ISP name using RISwhois.">ASN, Network Range, ISP Name (RISwhois)</a></li>
+        <li><a href="https://metrics.torproject.org/" target="_blank" title="Check Tor Network status.">Tor Network Status</a></li>
+    </ul>
+
+</body>
+</html>
+
+</body>
+</html>
