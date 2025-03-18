@@ -190,7 +190,63 @@
         <li><a href="#" title="Retrieve ASN, network range, and ISP name using RISwhois.">ASN, Network Range, ISP Name (RISwhois)</a></li>
         <li><a href="https://metrics.torproject.org/" target="_blank" title="Check Tor Network status.">Tor Network Status</a></li>
     </ul>
+&nbsp; &nbsp; &nbsp 
 
+<HR><b> Port Activity</b></HR> 
+<ul> 
+<li> <a href="#" title="check active connections:">
+            </a>
+            <pre>netstat -anv | grep ESTABLISHED</pre>
+
+<li> <a href="#" title="Identify Which App is Using a Port (lsof)">
+            </a>
+            <pre>sudo lsof -i -P | grep LISTEN</pre>
+
+<li> <a href="#" title="To find a specific port (e.g., 8080):">
+            </a>
+            <pre>sudo lsof -i :8080</pre>
+
+<li> <a href="#" title="View Network Activity in Real-Time (nettop)">
+            </a>
+            <pre>nettop -m tcp</pre>
+       </li>
+    </ul>
+
+  </ul>
+
+<HR><b> Network Activity</b></HR> 
+<ul> 
+<li> <a href="#" title="To monitor for a longer period (e.g., 60 seconds):">
+            </a>
+            <pre>nettop -m tcp -L 60 > network_activity.txt</pre>
+
+<li> <a href="#" title="To log all network connections to a file:">
+            </a>
+            <pre>netstat -anv > netstat_output.txt</pre>
+
+<li> <a href="#" title="Ongoing monitoring (updates every 5 seconds)">
+            </a>
+            <pre>while true; do netstat -anv >> netstat_output.txt; sleep 5; done</pre>
+
+<li> <a href="#" title="View Network Activity in Real-Time (nettop)">
+            </a>
+            <pre>nettop -m tcp</pre>
+       </li>
+    </ul>
+
+  </ul>
+
+    <hr>
+    <h2>Splunk Commands</h2>
+    <ul>
+        <li>
+            <a href="#" title="Start Splunk from the command line.">
+                Start Splunk
+            </a>
+            <pre>rw@Rs-MacBook-Pro ~ % cd /Applications/Splunk/bin</pre>
+            <pre>rw@Rs-MacBook-Pro bin % ./splunk start</pre>
+        </li>
+    </ul>
 </body>
 </html>
 
